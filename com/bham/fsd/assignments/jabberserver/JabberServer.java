@@ -27,6 +27,7 @@ public class JabberServer implements Runnable {
         {
             try {
                 Socket clientSocket = serverSocket.accept();
+                ClientConnection client = new ClientConnection(clientSocket, new JabberDatabase());
                 Thread.sleep(100);
             } catch (Exception e) {
                 e.printStackTrace();
