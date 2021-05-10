@@ -22,8 +22,7 @@ public class testClient {
             ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
             ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream());
         
-        
-            while(!(input = br.readLine()).equals("quit"))
+            while(!(input = br.readLine()).equals("signout"))
             {
                 JabberMessage jm = new JabberMessage(input);
 
@@ -40,6 +39,7 @@ public class testClient {
                 }
             }
 
+            oos.writeObject(new JabberMessage("signout"));
             System.out.println("Client closing...");
             clientSocket.close();
             br.close();

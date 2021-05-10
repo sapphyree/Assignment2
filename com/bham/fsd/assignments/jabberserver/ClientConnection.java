@@ -9,19 +9,16 @@ public class ClientConnection implements Runnable {
     private JabberDatabase db;
     private String clientUsername;
 
-
     public ClientConnection(Socket socket, JabberDatabase database)
     {
         clientSocket = socket;
         db = database;
         new Thread(this).start();
     }
-    
 
     public void run()
     {
         try{
-
             ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream());
             ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
             JabberMessage request;
@@ -32,9 +29,12 @@ public class ClientConnection implements Runnable {
             
                 try {
                     String[] reqSplit = request.getMessage().split(" ", 2);
-                    //String reqToken = reqSplit[0];
-                    //String data = reqSplit[1];
 
+                    if(reqSplit[0].equals("signout"))
+                    {
+                        System.out.println("Socket closed...");
+                        break;
+                    }
 
                     switch (reqSplit[0]) {
                         case "signin":
@@ -56,8 +56,6 @@ public class ClientConnection implements Runnable {
                             oos.writeObject(new JabberMessage("signedin"));
                             oos.flush();
                             clientUsername = reqSplit[1];
-                            break;
-                        case "signout":
                             break;
                         case "timeline":
                             oos.writeObject(new JabberMessage("timeline", db.getTimelineOfUserEx(clientUsername)));
@@ -82,15 +80,13 @@ public class ClientConnection implements Runnable {
                             oos.writeObject(new JabberMessage("posted"));
                             oos.flush();
                             break;
-                        default:
-                            //System.out.println("Switch-case detection.");
-                            break;
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                //System.out.println("Post Switch-case detection.");
-            }}
+            }
+            clientSocket.close();
+        }
         catch(Exception e)
         {
             e.printStackTrace();

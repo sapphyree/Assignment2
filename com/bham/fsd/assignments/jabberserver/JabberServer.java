@@ -26,24 +26,19 @@ public class JabberServer implements Runnable {
         while(true)
         {
             try {
-                //System.out.println("Client found!");
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("Client found!");
+                System.out.println("Client connected.");
                 ClientConnection client = new ClientConnection(clientSocket, new JabberDatabase());
                 Thread.sleep(100);
             } catch (Exception e) {
                 //e.printStackTrace();
-                //System.out.println("Listening...");
             }
-
         }
-
     }
 
     public static void main(String arg[])
     {
         new JabberServer();
     }
-
 
 }
