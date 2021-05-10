@@ -10,7 +10,7 @@ public class JabberServer implements Runnable {
 
     public JabberServer() {
         try{
-            ServerSocket serverSocket = new ServerSocket(PORT_NUMBER);
+            serverSocket = new ServerSocket(PORT_NUMBER);
             serverSocket.setSoTimeout(300);
             System.out.println("Server online.");
         }
@@ -26,13 +26,18 @@ public class JabberServer implements Runnable {
         while(true)
         {
             try {
+                //System.out.println("Client found!");
                 Socket clientSocket = serverSocket.accept();
+                System.out.println("Client found!");
                 ClientConnection client = new ClientConnection(clientSocket, new JabberDatabase());
                 Thread.sleep(100);
             } catch (Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
+                //System.out.println("Listening...");
             }
+
         }
+
     }
 
     public static void main(String arg[])
