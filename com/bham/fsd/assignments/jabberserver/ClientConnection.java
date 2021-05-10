@@ -64,12 +64,23 @@ public class ClientConnection implements Runnable {
                             oos.flush();
                             break;
                         case "users":
+                            oos.writeObject(new JabberMessage("users", db.getUsersNotFollowed(db.getUserID(clientUsername))));
+                            oos.flush();
                             break;
                         case "post":
+                            db.addJab(clientUsername, reqSplit[1]);
+                            oos.writeObject(new JabberMessage("posted"));
+                            oos.flush();
                             break;
                         case "like":
+                            db.addLike(db.getUserID(clientUsername), Integer.parseInt(reqSplit[1]));
+                            oos.writeObject(new JabberMessage("posted"));
+                            oos.flush();
                             break;
                         case "follow":
+                            db.addFollower(db.getUserID(clientUsername), reqSplit[1]);
+                            oos.writeObject(new JabberMessage("posted"));
+                            oos.flush();
                             break;
                         default:
                             //System.out.println("Switch-case detection.");
