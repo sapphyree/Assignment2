@@ -2,35 +2,66 @@ package com.bham.fsd.assignments.jabberserver;
 
 import java.io.*;
 import java.net.*;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 public class testClient {
     
-    public static void main(String[] args) throws Exception
+    public static void main(String[] args)
     {
         System.out.println("Client Running.");
 
-        Socket clientSocket = new Socket("localhost", 44444);
+        try{
+            Socket clientSocket = new Socket("localhost", 44444);
 
-        System.out.println("Socket created.");
-        Scanner s = new Scanner(System.in);
-        while(true)
-        {
-            String input = s.nextLine();
-            JabberMessage jm = new JabberMessage(input);
-
+            System.out.println("Socket created.");
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String input;
+            JabberMessage response;
             ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
-            oos.writeObject(jm);
-            oos.flush();
-
             ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream());
-            JabberMessage response = (JabberMessage) ois.readObject();
-            System.out.println(response.getMessage());
-        }
-
         
+        
+            while(!(input = br.readLine()).equals("quit"))
+            {
+                JabberMessage jm = new JabberMessage(input);
 
-        //clientSocket.close();
+                oos.writeObject(jm);
+                oos.flush();
 
+                if((response = (JabberMessage) ois.readObject()) != null)
+                {
+                    System.out.println(response.getMessage());
+                    if(response.getData() != null)
+                    {
+                        print2(response.getData());
+                    }
+                }
+            }
+
+            System.out.println("Client closing...");
+            clientSocket.close();
+            br.close();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
     }
+
+    private static void print2(ArrayList<ArrayList<String>> list) {
+		
+		for (ArrayList<String> s: list) {
+			print1(s);
+			System.out.println();
+		}
+	}
+
+    private static void print1(ArrayList<String> list) {
+		
+		for (String s: list) {
+			System.out.print(s + " ");
+		}
+	}
 }
