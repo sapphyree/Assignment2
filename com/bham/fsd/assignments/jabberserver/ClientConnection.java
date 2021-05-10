@@ -24,17 +24,38 @@ public class ClientConnection implements Runnable {
                 ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream());
                 ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
                 JabberMessage request = (JabberMessage) ois.readObject();
-                String reqToken = request.getMessage().split("\\s+")[0];
+                String[] reqSplit = request.getMessage().split(" ", 2);
+                String reqToken = reqSplit[0];
+                String data = reqSplit[1];
+
 
                 switch (reqToken) {
                     case "signin":
-                        if(checkUsername(reqToken));
+                        if(checkUsername(data))
                         {
                             oos.writeObject(new JabberMessage("signedin"));
                             oos.flush();
                         }
+                        else
+                        {
+                            oos.writeObject(new JabberMessage("unknown-user"));
+                            oos.flush();
+                        }
                         break;
-                
+                    case "register":
+                        break;
+                    case "signout":
+                        break;
+                    case "timeline":
+                        break;
+                    case "users":
+                        break;
+                    case "post":
+                        break;
+                    case "like":
+                        break;
+                    case "follow":
+                        break;
                     default:
                         break;
                 }
