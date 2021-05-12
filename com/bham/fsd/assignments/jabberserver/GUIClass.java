@@ -1,4 +1,4 @@
-package sample;
+package com.bham.fsd.assignments.jabberserver;
 
 import javafx.application.Application;
 import javafx.fxml.FXML;
